@@ -1,16 +1,11 @@
-title: Aljohn Niño A. Fornolles # your name (or website title) here
-logo: "/images/logo2.png?raw=true" # your photo (or logo) here
-description: > # your text below (remove <br> elements if you don't need line breaks) 
-  <br>
-  A 3rd-year BSIT student at UC-Banilad Campus, passionate about building technology solutions and exploring the world of IT.
-  <br>
-  <br>
-  Driven by curiosity and a love for learning, with a growing skill set in software development and information systems.
-  <br>
-  <br>
-   <a href="https://www.linkedin.com/in/aljohn-ni%C3%B1o-fornolles-330719205/">View My LinkedIn Profile</a> 
-  
+title: Aljohn Niño A. Fornolles
+logo: "/images/logo2.png?raw=true"
+description: >
+  3rd-year BSIT student at UC-Banilad Campus.
+  Passionate about technology solutions.
+  <a href="https://www.linkedin.com/in/aljohn-ni%C3%B1o-fornolles-330719205/" style="display: block; margin-top: 10px; color: #1da1f2; text-decoration: underline; cursor: pointer !important;">View My LinkedIn Profile</a>
+
 remote_theme: pages-themes/minimal@v0.2.0
 plugins:
-- jekyll-remote-theme
-google_analytics: UA-000000-0 # your Google Analytics tracking ID here
+  - jekyll-remote-theme
+google_analytics: UA-000000-0

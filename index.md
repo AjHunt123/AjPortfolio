@@ -8,7 +8,7 @@
 - **Core competencies:** Object-oriented programming, state machines, collision detection, UI scaling, data persistence (JSON/PlayerPrefs)
 - **Soft skills:** Debugging, documentation, iteration-based design, team collaboration
 
-**Currently exploring:** Multiplayer networking, shader graph, and optimization techniques for mobile builds.
+**Currently exploring:** Deepening my understanding of Java and C#, studying game objectives and win conditions, improving game functionality through playtesting, and learning how to structure clean, reusable code for smaller game projects.
 
 ---
 

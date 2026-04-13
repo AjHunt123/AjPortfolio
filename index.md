@@ -17,7 +17,7 @@
 [Rogue Like Game](/pdf/sample_presentation.pdf)
 <img src="images/project2.0.png?raw=true"/>
 <img src="images/project2.1.png??raw=true"/>
-<img src="images/project2.3.png??raw=true"/>
+<img src="images/project2.png??raw=true"/>
 <img src="images/project2.4.gif?raw=true" width="500"/>
 
 

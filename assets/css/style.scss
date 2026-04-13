@@ -354,3 +354,80 @@ p[style] a:hover { color: var(--accent) !important; }
   h3 { padding: 14px 16px 8px !important; }
   h3 + p, p:has(img) { padding: 6px 16px !important; }
 }
+
+/* ── STICKY SIDEBAR (FIXED WHILE SCROLLING) ────────────────── */
+.wrapper {
+  position: relative !important;
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  gap: 32px !important;
+}
+
+/* Make header sticky */
+header {
+  position: sticky !important;
+  top: 20px !important;
+  align-self: flex-start !important;
+  width: 270px !important;
+  flex-shrink: 0 !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow-y: auto !important;
+}
+
+/* Main content area */
+section {
+  flex: 1 !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+
+/* Custom scrollbar for sticky header */
+header::-webkit-scrollbar {
+  width: 3px;
+}
+
+header::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* Subtle backdrop blur on hover */
+header {
+  backdrop-filter: blur(0px);
+  transition: backdrop-filter 0.3s;
+}
+
+header:hover {
+  backdrop-filter: blur(4px);
+}
+
+/* Smooth scroll offset for anchor links */
+html {
+  scroll-padding-top: 20px;
+  scroll-behavior: smooth;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  header {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  
+  section {
+    width: 100% !important;
+  }
+}

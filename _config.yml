@@ -1,10 +1,14 @@
-title: John Doe # your name (or website title) here
+title: Aljohn Niño A. Fornolles # your name (or website title) here
 logo: "/images/logo.png?raw=true" # your photo (or logo) here
 description: > # your text below (remove <br> elements if you don't need line breaks)
   First description 
-  <br><br>
+  <br>
+  A 3rd-year BSIT student at UC-Banilad Campus, passionate about building technology solutions and exploring the world of IT.
+  <br>
   Second description 
-  <br><br>
+  <br>
+  Driven by curiosity and a love for learning, with a growing skill set in software development and information systems.
+  <br>
   <a href="https://www.linkedin.com/in/example/">View My LinkedIn Profile</a> 
   
 remote_theme: pages-themes/minimal@v0.2.0

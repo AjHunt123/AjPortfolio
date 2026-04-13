@@ -8,7 +8,8 @@ description: > # your text below (remove <br> elements if you don't need line br
   <br>
   Driven by curiosity and a love for learning, with a growing skill set in software development and information systems.
   <br>
-  <a href="https://www.linkedin.com/in/example/">View My LinkedIn Profile</a> 
+  <br>
+  <a href="https://www.linkedin.com/in/aljohn-ni%C3%B1o-fornolles-330719205/">View My LinkedIn Profile</a> 
   
 remote_theme: pages-themes/minimal@v0.2.0
 plugins:

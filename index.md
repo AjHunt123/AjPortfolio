@@ -2,10 +2,13 @@
 
 ---
 
-### Category Name 1 
+### Project No#1
 
-[Project 1 Title](/sample_page)
-<img src="images/dummy_thumbnail.jpg?raw=true"/>
+[Shooter Game](/sample_page)
+<img src="images/project1.png?raw=true"/>
+<img src="images/project1.2.png??raw=true"/>
+<img src="images/project1.3.png??raw=true"/>
+<img src="images/project1.4.gif?raw=true" width="500"/>
 
 ---
 [Project 2 Title](/pdf/sample_presentation.pdf)

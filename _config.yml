@@ -5,29 +5,6 @@ description: >
   Passionate about technology solutions.
   <a href="https://www.linkedin.com/in/aljohn-ni%C3%B1o-fornolles-330719205/" style="display: block; margin-top: 10px; color: #1da1f2; text-decoration: underline; cursor: pointer !important;">View My LinkedIn Profile</a>
 
-## Portfolio
-
----
-
-## About Me
-
-I'm a 3rd-year BSIT student at UC-Banilad with a growing passion for game development and interactive systems. I started coding at 19, fell in love with Unity at 20, and haven't stopped building since. I believe the best way to learn is by making — so I build, break, and rebuild constantly.
-
-**What drives me:** Creating experiences that make people think, laugh, or feel challenged. Whether it's a tight shooter or a unpredictable dungeon crawler, I care about how the player *feels*.
-
-🔍 **Currently seeking:** Internship or junior developer role starting mid-2025.
-
----
-
-## Technical Toolkit
-
-| Category | Skills |
-|----------|--------|
-| **Languages** | C#, JavaScript, HTML/CSS, Python (basic) |
-| **Game Engines** | Unity (primary), Godot (learning) |
-| **Tools** | Git, GitHub, VS Code, Blender (basic modeling), Photoshop |
-| **Core Concepts** | OOP, Procedural Generation, State Machines, Object Pooling, UI/UX |
-
 remote_theme: pages-themes/minimal@v0.2.0
 plugins:
 - jekyll-remote-theme

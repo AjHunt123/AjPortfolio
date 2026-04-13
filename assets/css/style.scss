@@ -117,7 +117,7 @@ header p {
 
 /* "Available" status pill */
 header > p:first-of-type::before {
-  content: '● AVAILABLE';
+  content: '● Currently on vacation in the Maldives.';
   display: block;
   font-family: 'DM Mono', monospace;
   font-size: 0.63rem;

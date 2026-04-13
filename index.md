@@ -18,8 +18,8 @@ This project focuses on responsive controls, dynamic difficulty scaling, and par
 The game was developed over 8 weeks as part of a game mechanics course. It taught me how to manage finite state machines (FSM) for enemy behavior, optimize object pooling for projectiles, and implement a responsive UI that scales across resolutions.
 
 <img src="images/project1.png?raw=true"/>
-<img src="images/project1.2.png??raw=true"/>
-<img src="images/project1.3.png??raw=true"/>
+<img src="images/project1.2.png?raw=true"/>
+<img src="images/project1.3.png?raw=true"/>
 <img src="images/project1.4.gif?raw=true" width="500"/>
 
 ---
@@ -40,8 +40,8 @@ This project explores permadeath mechanics, randomized loot tables, and turn-bas
 This project was a deep dive into data persistence (PlayerPrefs + JSON serialization), randomization without breaking balance, and creating a satisfying risk/reward loop. I also learned to design modular enemy behaviors using scriptable objects.
 
 <img src="images/project2.0.png?raw=true"/>
-<img src="images/project2.1.png??raw=true"/>
-<img src="images/project2.png??raw=true"/>
+<img src="images/project2.1.png?raw=true"/>
+<img src="images/project2.png?raw=true"/>
 <img src="images/project2.4.gif?raw=true" width="500"/>
 
 ---

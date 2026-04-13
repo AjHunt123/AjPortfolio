@@ -5,13 +5,6 @@ description: >
   Passionate about technology solutions.
   <a href="https://www.linkedin.com/in/aljohn-ni%C3%B1o-fornolles-330719205/" style="display: block; margin-top: 10px; color: #1da1f2; text-decoration: underline; cursor: pointer !important;">View My LinkedIn Profile</a>
 
-
-remote_theme: pages-themes/minimal@v0.2.0
-plugins:
-- jekyll-remote-theme
-google_analytics: UA-000000-0 # your Google Analytics tracking ID here
-
-
 ## Portfolio
 
 ---
@@ -34,3 +27,8 @@ I'm a 3rd-year BSIT student at UC-Banilad with a growing passion for game develo
 | **Game Engines** | Unity (primary), Godot (learning) |
 | **Tools** | Git, GitHub, VS Code, Blender (basic modeling), Photoshop |
 | **Core Concepts** | OOP, Procedural Generation, State Machines, Object Pooling, UI/UX |
+
+remote_theme: pages-themes/minimal@v0.2.0
+plugins:
+- jekyll-remote-theme
+google_analytics: UA-000000-0 # your Google Analytics tracking ID here

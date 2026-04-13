@@ -1,8 +1,22 @@
+## About Me
+
+**Hi, I'm Aj — a third-year BSIT student at the **University of Cebu - Banilad**. I'm passionate about game development, interactive systems, and crafting engaging player experiences through code. Over the past few years, I've been building foundational skills in programming, design patterns, and game mechanics — with a focus on translating ideas into playable projects.
+
+**Technical skills:**
+- **Languages:** C#, Java, basic HTML/CSS, JavaScript
+- **Game dev tools:** Visual Studio, Git & GitHub
+- **Core competencies:** Object-oriented programming, state machines, collision detection, UI scaling, data persistence (JSON/PlayerPrefs)
+- **Soft skills:** Debugging, documentation, iteration-based design, team collaboration
+
+**Currently exploring:** Multiplayer networking, shader graph, and optimization techniques for mobile builds.
+
+---
+
 ## Portfolio
 
 ---
 
-### Project No#1: Astro Breaker — Precision Shooter
+### Project No#1: Precision Shooter
 
 [Shooter Game](/sample_page)
 
@@ -24,7 +38,7 @@ The game was developed over 8 weeks as part of a game mechanics course. It taugh
 
 ---
 
-### Project No#2: Duskfall — Rogue-like Dungeon Crawler
+### Project No#2: Rogue-like Dungeon Crawler
 
 [Rogue Like Game](/pdf/sample_presentation.pdf)
 
@@ -52,5 +66,3 @@ This project was a deep dive into data persistence (PlayerPrefs + JSON serializa
 - Version control best practices with Git LFS for game assets.
 
 > *All projects shown are student works created for academic and portfolio purposes. Full source code is available upon request.*
-
----

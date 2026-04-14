@@ -41,7 +41,12 @@
       position: relative;
     }
 
-    /* ── ENHANCED ANIMATED BACKGROUND ───────────────────────────── */
+    /* ── ENHANCED ANIMATED BACKGROUND (NO IMAGES) ───────────────── */
+    @keyframes bgPulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
     @keyframes bgDrift {
       0% { transform: translate(0%, 0%) scale(1); }
       100% { transform: translate(2%, 1%) scale(1.03); }
@@ -52,6 +57,7 @@
       100% { transform: translate(-1%, -1%) rotate(2deg); }
     }
 
+    /* Moving gradient orb 1 */
     body::before {
       content: '';
       position: fixed;
@@ -65,6 +71,7 @@
       animation: bgDrift 20s ease-in-out infinite alternate;
     }
 
+    /* Moving gradient orb 2 */
     body::after {
       content: '';
       position: fixed;
@@ -78,6 +85,7 @@
       animation: bgFloat 25s ease-in-out infinite alternate;
     }
 
+    /* Ensure content stays above animated background */
     .wrapper {
       position: relative;
       z-index: 2;
@@ -101,64 +109,6 @@
       transform: translateY(0);
     }
 
-    /* ── CAROUSEL STYLES ───────────────────────────────────────── */
-    .carousel-container {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      border-radius: var(--r);
-      margin: 20px 0;
-    }
-
-    .carousel-slides {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .carousel-slide {
-      min-width: 100%;
-      flex-shrink: 0;
-    }
-
-    .carousel-slide img {
-      width: 100%;
-      display: block;
-      margin: 0;
-      border-radius: var(--r);
-    }
-
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px 0;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--txt-faint);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .dot.active {
-      background: var(--accent);
-      width: 24px;
-      border-radius: 4px;
-      box-shadow: 0 0 8px var(--accent);
-    }
-
-    .dot:hover {
-      background: var(--accent);
-    }
-
-    /* Pause on hover */
-    .carousel-container:hover .carousel-slides {
-      animation-play-state: paused;
-    }
-
     /* ── SCROLLBAR ───────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -177,6 +127,7 @@
       animation: fadeUp 0.55s ease both;
     }
 
+    /* Top glow stripe */
     header::before {
       content: '';
       position: absolute;
@@ -184,6 +135,7 @@
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
 
+    /* Bottom-right ambient glow */
     header::after {
       content: '';
       position: absolute;
@@ -194,6 +146,7 @@
       pointer-events: none;
     }
 
+    /* Site name */
     header h1 {
       font-family: 'Syne', sans-serif !important;
       font-size: 1.45rem !important;
@@ -213,6 +166,7 @@
       margin-top: 10px;
     }
 
+    /* Logo / profile photo */
     header img {
       border-radius: var(--r-lg) !important;
       border: 1px solid var(--border) !important;
@@ -227,12 +181,14 @@
       box-shadow: 0 0 56px rgba(0,200,240,0.18), 0 16px 48px rgba(0,0,0,0.55) !important;
     }
 
+    /* Description */
     header p {
       font-size: 0.85rem !important;
       color: var(--txt-muted) !important;
       line-height: 1.65;
     }
 
+    /* "Available" status pill */
     header > p:first-of-type::before {
       content: '● Currently on vacation in the Maldives.';
       display: block;
@@ -248,6 +204,7 @@
       margin-bottom: 10px;
     }
 
+    /* Header links (LinkedIn, GitHub, etc.) */
     header a {
       display: flex !important;
       align-items: center;
@@ -283,6 +240,7 @@
       border-color: rgba(255,255,255,0.18) !important;
     }
 
+    /* Footer line inside header */
     header p:last-of-type {
       font-family: 'DM Mono', monospace;
       font-size: 0.68rem !important;
@@ -304,6 +262,7 @@
       color: var(--txt) !important;
     }
 
+    /* "Portfolio" page title */
     h1 {
       font-size: 2.4rem !important;
       font-weight: 800 !important;
@@ -312,6 +271,7 @@
       border-bottom: none !important;
     }
 
+    /* Sub-section headings */
     h2 {
       font-size: 1.5rem !important;
       font-weight: 700 !important;
@@ -331,6 +291,7 @@
       border-radius: 2px;
     }
 
+    /* Project label — h3 becomes a card header */
     h3 {
       font-family: 'DM Mono', monospace !important;
       font-size: 0.78rem !important;
@@ -352,6 +313,7 @@
       color: var(--txt-faint);
     }
 
+    /* ── PROJECT LINK ───────────────────────────────────────────── */
     h3 + p {
       background: var(--bg-card);
       border-left: 1px solid var(--border);
@@ -371,16 +333,25 @@
     }
     h3 + p a:hover { color: var(--accent) !important; }
 
+    /* ── IMAGES INSIDE PROJECT BLOCKS ───────────────────────────── */
     section img {
       display: block;
       width: 100%;
       border-radius: var(--r);
       border: 1px solid var(--border);
       box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+      margin: 10px 0;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       background: var(--bg-raised);
     }
 
+    section img:hover {
+      transform: scale(1.012) translateY(-2px);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,200,240,0.14);
+      border-color: var(--border-h);
+    }
+
+    /* Paragraphs that contain images — card body */
     p:has(img) {
       background: var(--bg-card) !important;
       border-left: 1px solid var(--border);
@@ -407,6 +378,7 @@
       background: transparent !important;
     }
 
+    /* ── GENERAL LINKS ──────────────────────────────────────────── */
     section a {
       color: var(--accent) !important;
       text-decoration: none !important;
@@ -415,14 +387,36 @@
     }
     section a:hover { border-color: var(--accent); }
 
+    /* ── PARAGRAPH TEXT ─────────────────────────────────────────── */
     p { color: var(--txt-muted) !important; }
     strong { color: var(--txt) !important; font-weight: 600; }
 
+    /* ── FOOTER CREDIT ──────────────────────────────────────────── */
+    p[style] {
+      font-family: 'DM Mono', monospace !important;
+      color: var(--txt-faint) !important;
+      font-size: 0.7rem !important;
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      background: none !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+    p[style] a {
+      color: var(--txt-faint) !important;
+      border-bottom: none !important;
+    }
+    p[style] a:hover { color: var(--accent) !important; }
+
+    /* ── ANIMATION ──────────────────────────────────────────────── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 768px) {
       header  { padding: 28px 18px !important; }
       section { padding: 28px 18px !important; }
@@ -430,6 +424,7 @@
       h3 + p, p:has(img) { padding: 6px 16px !important; }
     }
 
+    /* ── STICKY SIDEBAR ────────────────────────────────────────── */
     .wrapper {
       position: relative !important;
       max-width: 1120px !important;
@@ -530,22 +525,8 @@
       <p><a href="#">Shooter Game</a></p>
       <p><strong>An arcade-style shooter built with Unity and C#.</strong> This project focuses on responsive controls, dynamic difficulty scaling, and particle-based visual feedback. The player pilots a spacecraft at the bottom of the screen, dodging enemy projectiles while destroying waves of increasingly agile foes.</p>
       <p><strong>Key features:</strong> Adaptive AI (FSM), power-up system, score chaining, audio integration. Developed over 8 weeks — taught me event-driven architecture and responsive UI scaling.</p>
-      
-      <!-- CAROUSEL 1 - AUTOMATIC -->
-      <div class="carousel-container" data-carousel="1">
-        <div class="carousel-slides">
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/0d1422/00c8f0?text=Precision+Shooter+Gameplay" alt="Gameplay">
-          </div>
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/111927/ff6b35?text=Power-up+System" alt="Power-up System">
-          </div>
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/0a1525/00c8f0?text=Boss+Encounter" alt="Boss Fight">
-          </div>
-        </div>
-        <div class="carousel-dots"></div>
-      </div>
+      <img src="https://placehold.co/800x400/0d1422/00c8f0?text=Precision+Shooter+Gameplay" alt="project1">
+      <img src="https://placehold.co/800x400/111927/ff6b35?text=Power+up+System" alt="project1.2">
       <hr>
     </div>
 
@@ -554,28 +535,14 @@
       <p><a href="#">Rogue Like Game</a></p>
       <p><strong>A procedurally generated rogue-like dungeon crawler built in Unity.</strong> This project explores permadeath mechanics, randomized loot tables, and turn-based tactical combat. Each playthrough offers a unique map layout, enemy placements, and item combinations — ensuring high replayability.</p>
       <p><strong>Core systems:</strong> Procedural level generation (BSP), loot & rarity system, permanent upgrades, save state management. Deep dive into data persistence (PlayerPrefs + JSON serialization) and modular enemy behaviors using scriptable objects.</p>
-      
-      <!-- CAROUSEL 2 - AUTOMATIC -->
-      <div class="carousel-container" data-carousel="2">
-        <div class="carousel-slides">
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/0d1422/a259ff?text=Procedural+Dungeon+Layout" alt="Dungeon Layout">
-          </div>
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/111927/00c8f0?text=Loot+Rarity+System" alt="Loot System">
-          </div>
-          <div class="carousel-slide">
-            <img src="https://placehold.co/800x400/0a1525/ffaa44?text=Turn+based+Combat" alt="Combat">
-          </div>
-        </div>
-        <div class="carousel-dots"></div>
-      </div>
+      <img src="https://placehold.co/800x400/0d1422/a259ff?text=Procedural+Dungeon+Layout" alt="project2">
+      <img src="https://placehold.co/800x400/111927/00c8f0?text=Loot+Rarity+System" alt="project2.1">
       <hr>
     </div>
 
     <div class="reveal-item">
-      <h2>📚 Currently Learning</h2>
-      <p>• Advanced C# and Java<br>• Game design patterns<br>• Better code structure and organization</p>
+      <h2>🧠 What I'm learning next</h2>
+      <p>• Multiplayer networking using Mirror or Photon (for a co-op dungeon crawler prototype).<br>• Shader graph for real-time VFX (energy shields, portals, heat distortion).<br>• Version control best practices with Git LFS for game assets.</p>
       <p><em>All projects shown are student works created for academic and portfolio purposes. Full source code is available upon request.</em></p>
     </div>
 
@@ -596,78 +563,16 @@ function updateReveals() {
     const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
     const visibleRatio = visibleHeight / rect.height;
     
+    // Appear when 20% visible
     if (visibleRatio > 0.2) {
       item.classList.add('revealed');
-    } else if (visibleRatio < 0.05) {
+    } 
+    // Disappear when less than 5% visible (scrolled past)
+    else if (visibleRatio < 0.05) {
       item.classList.remove('revealed');
     }
   });
 }
-
-// AUTOMATIC CAROUSEL FUNCTION
-function initCarousel(container) {
-  const slidesContainer = container.querySelector('.carousel-slides');
-  const slides = container.querySelectorAll('.carousel-slide');
-  const dotsContainer = container.querySelector('.carousel-dots');
-  let currentIndex = 0;
-  let autoInterval;
-  const intervalTime = 4000; // 4 seconds per slide
-
-  // Create dots
-  slides.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.classList.add('dot');
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      goToSlide(index);
-      resetAutoPlay();
-    });
-    dotsContainer.appendChild(dot);
-  });
-
-  function goToSlide(index) {
-    if (index < 0) index = 0;
-    if (index >= slides.length) index = 0;
-    currentIndex = index;
-    slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
-    
-    // Update dots
-    const dots = dotsContainer.querySelectorAll('.dot');
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentIndex);
-    });
-  }
-
-  function nextSlide() {
-    goToSlide(currentIndex + 1);
-  }
-
-  function startAutoPlay() {
-    autoInterval = setInterval(nextSlide, intervalTime);
-  }
-
-  function resetAutoPlay() {
-    clearInterval(autoInterval);
-    startAutoPlay();
-  }
-
-  // Pause on hover
-  container.addEventListener('mouseenter', () => {
-    clearInterval(autoInterval);
-  });
-  
-  container.addEventListener('mouseleave', () => {
-    startAutoPlay();
-  });
-
-  // Start auto play
-  startAutoPlay();
-}
-
-// Initialize all carousels
-document.querySelectorAll('.carousel-container').forEach(container => {
-  initCarousel(container);
-});
 
 window.addEventListener('scroll', () => requestAnimationFrame(updateReveals));
 window.addEventListener('resize', updateReveals);

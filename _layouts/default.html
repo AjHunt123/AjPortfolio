@@ -19,6 +19,142 @@
    <!--[if lt IE 9]>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
    <![endif]-->
+   
+   <style>
+      /* ── REVEAL ON SCROLL (Fade + Slide) ───────────────────────── */
+      .reveal-item {
+         opacity: 0;
+         transform: translateY(30px);
+         filter: blur(4px);
+         transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+                     transform 0.7s ease,
+                     filter 0.5s ease;
+      }
+      
+      .reveal-item.revealed {
+         opacity: 1;
+         transform: translateY(0);
+         filter: blur(0);
+      }
+      
+      /* ── SKILL CAROUSEL STYLES ─────────────────────────────────── */
+      .skill-carousel {
+         background: var(--bg-card, #0d1422);
+         border: 1px solid var(--border, rgba(0,200,240,0.11));
+         border-radius: 18px;
+         padding: 28px 20px;
+         margin: 40px 0 32px;
+      }
+      
+      .carousel-title {
+         font-family: 'Syne', sans-serif;
+         font-size: 1.3rem;
+         font-weight: 700;
+         margin-bottom: 20px;
+         color: var(--txt, #dde6f0);
+         border-left: 3px solid var(--accent, #00c8f0);
+         padding-left: 18px;
+      }
+      
+      .carousel-container {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         position: relative;
+      }
+      
+      .carousel-track-wrapper {
+         overflow: hidden;
+         flex: 1;
+         border-radius: 80px;
+         background: rgba(0,0,0,0.2);
+         padding: 8px 0;
+      }
+      
+      .carousel-track {
+         display: flex;
+         gap: 20px;
+         transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+         will-change: transform;
+      }
+      
+      .skill-badge {
+         flex: 0 0 auto;
+         background: linear-gradient(125deg, rgba(0,200,240,0.12) 0%, rgba(0,0,0,0.3) 100%);
+         padding: 8px 22px;
+         border-radius: 60px;
+         font-family: 'DM Mono', monospace;
+         font-weight: 500;
+         font-size: 0.95rem;
+         letter-spacing: 0.02em;
+         color: var(--accent, #00c8f0);
+         border: 1px solid var(--border-h, rgba(0,200,240,0.32));
+         white-space: nowrap;
+         transition: all 0.2s ease;
+         cursor: default;
+      }
+      
+      .skill-badge:hover {
+         transform: scale(1.03);
+         background: rgba(0,200,240,0.22);
+         border-color: var(--accent, #00c8f0);
+         box-shadow: 0 0 12px rgba(0,200,240,0.3);
+      }
+      
+      .carousel-btn {
+         background: var(--bg-raised, #111927);
+         border: 1px solid var(--border, rgba(0,200,240,0.11));
+         color: var(--accent, #00c8f0);
+         width: 44px;
+         height: 44px;
+         border-radius: 50%;
+         cursor: pointer;
+         font-size: 1.4rem;
+         font-weight: bold;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         transition: all 0.2s ease;
+         background-color: rgba(17, 25, 39, 0.8);
+         backdrop-filter: blur(4px);
+      }
+      
+      .carousel-btn:hover {
+         background: var(--accent, #00c8f0);
+         color: #080d16;
+         border-color: var(--accent, #00c8f0);
+         transform: scale(1.05);
+         box-shadow: 0 0 12px var(--accent, #00c8f0);
+      }
+      
+      .carousel-dots {
+         display: flex;
+         justify-content: center;
+         gap: 10px;
+         margin-top: 24px;
+      }
+      
+      .dot {
+         width: 8px;
+         height: 8px;
+         background: var(--txt-faint, #384858);
+         border-radius: 10px;
+         cursor: pointer;
+         transition: all 0.2s ease;
+      }
+      
+      .dot.active {
+         width: 28px;
+         background: var(--accent, #00c8f0);
+         box-shadow: 0 0 6px var(--accent, #00c8f0);
+      }
+      
+      @media (max-width: 640px) {
+         .skill-badge { font-size: 0.75rem; padding: 6px 14px; }
+         .carousel-btn { width: 36px; height: 36px; font-size: 1.1rem; }
+         .carousel-title { font-size: 1.1rem; }
+      }
+   </style>
 </head>
 <body>
    <div class="wrapper">
@@ -53,5 +189,144 @@
       </footer>
    </div>
    <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
+   
+   <script>
+      (function() {
+         // ===== REVEAL EFFECT ON SCROLL =====
+         // Select all elements that should animate
+         const elementsToReveal = document.querySelectorAll('section h2, section h3, section p, section img, section hr');
+         
+         elementsToReveal.forEach(el => {
+            el.classList.add('reveal-item');
+         });
+         
+         // Create intersection observer for reveal effect
+         const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+               if (entry.isIntersecting) {
+                  entry.target.classList.add('revealed');
+               } else {
+                  // Remove class when out of view (so it hides again until focused)
+                  entry.target.classList.remove('revealed');
+               }
+            });
+         }, { threshold: 0.2 });
+         
+         document.querySelectorAll('.reveal-item').forEach(el => {
+            revealObserver.observe(el);
+         });
+         
+         // ===== SKILL CAROUSEL =====
+         const skills = ['WordPress', 'C#', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JavaScript', 'Unreal Engine'];
+         
+         // Find where to insert the carousel (after the first h2, or at beginning of section)
+         const firstH2 = document.querySelector('section h2');
+         const existingCarousel = document.querySelector('.skill-carousel');
+         
+         if (firstH2 && !existingCarousel) {
+            // Create carousel HTML
+            const carouselHTML = `
+               <div class="skill-carousel reveal-item">
+                  <div class="carousel-title">✦ Tech Stack Carousel</div>
+                  <div class="carousel-container">
+                     <button class="carousel-btn prev-btn" aria-label="Previous">←</button>
+                     <div class="carousel-track-wrapper">
+                        <div class="carousel-track" id="carouselTrack">
+                           ${skills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
+                        </div>
+                     </div>
+                     <button class="carousel-btn next-btn" aria-label="Next">→</button>
+                  </div>
+                  <div class="carousel-dots" id="carouselDots"></div>
+               </div>
+            `;
+            
+            // Insert carousel before the first h2
+            firstH2.insertAdjacentHTML('beforebegin', carouselHTML);
+            
+            // Initialize carousel functionality
+            let currentIndex = 0;
+            const track = document.querySelector('.carousel-track');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const dotsContainer = document.getElementById('carouselDots');
+            
+            function getItemsPerView() {
+               if (window.innerWidth < 600) return 1;
+               if (window.innerWidth < 900) return 2;
+               return 3;
+            }
+            
+            function updateCarousel() {
+               const badges = document.querySelectorAll('.skill-badge');
+               const perView = getItemsPerView();
+               const maxIndex = Math.max(0, badges.length - perView);
+               
+               // Clamp current index
+               if (currentIndex > maxIndex) currentIndex = maxIndex;
+               if (currentIndex < 0) currentIndex = 0;
+               
+               // Calculate translate value
+               const firstBadge = badges[0];
+               if (firstBadge && badges.length > 0) {
+                  const badgeWidth = firstBadge.offsetWidth;
+                  const gap = 20; // gap from CSS
+                  const shift = currentIndex * (badgeWidth + gap);
+                  track.style.transform = `translateX(-${shift}px)`;
+               }
+               
+               // Update dots
+               const totalDots = Math.max(1, badges.length - perView + 1);
+               if (dotsContainer) {
+                  dotsContainer.innerHTML = '';
+                  for (let i = 0; i < totalDots; i++) {
+                     const dot = document.createElement('div');
+                     dot.classList.add('dot');
+                     if (i === currentIndex) dot.classList.add('active');
+                     dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateCarousel();
+                     });
+                     dotsContainer.appendChild(dot);
+                  }
+               }
+            }
+            
+            // Event listeners
+            if (prevBtn && nextBtn) {
+               prevBtn.addEventListener('click', () => {
+                  if (currentIndex > 0) {
+                     currentIndex--;
+                     updateCarousel();
+                  }
+               });
+               
+               nextBtn.addEventListener('click', () => {
+                  const badges = document.querySelectorAll('.skill-badge');
+                  const perView = getItemsPerView();
+                  const maxIndex = Math.max(0, badges.length - perView);
+                  if (currentIndex < maxIndex) {
+                     currentIndex++;
+                     updateCarousel();
+                  }
+               });
+               
+               window.addEventListener('resize', () => {
+                  updateCarousel();
+               });
+               
+               // Initial update
+               setTimeout(updateCarousel, 100);
+            }
+         }
+         
+         // Also observe the newly added carousel
+         const newCarousel = document.querySelector('.skill-carousel');
+         if (newCarousel) {
+            newCarousel.classList.add('reveal-item');
+            revealObserver.observe(newCarousel);
+         }
+      })();
+   </script>
 </body>
 </html>

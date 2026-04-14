@@ -37,13 +37,14 @@
          filter: blur(0);
       }
       
-      /* ── SKILL CAROUSEL STYLES ─────────────────────────────────── */
+      /* ── SKILL CAROUSEL STYLES (Enhanced for Auto-Play) ────────── */
       .skill-carousel {
          background: var(--bg-card, #0d1422);
          border: 1px solid var(--border, rgba(0,200,240,0.11));
          border-radius: 18px;
          padding: 28px 20px;
          margin: 40px 0 32px;
+         transition: all 0.3s ease;
       }
       
       .carousel-title {
@@ -54,6 +55,42 @@
          color: var(--txt, #dde6f0);
          border-left: 3px solid var(--accent, #00c8f0);
          padding-left: 18px;
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         flex-wrap: wrap;
+         gap: 12px;
+      }
+      
+      .auto-play-indicator {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         font-size: 0.8rem;
+         font-family: 'DM Mono', monospace;
+         background: rgba(0, 200, 240, 0.08);
+         padding: 5px 12px;
+         border-radius: 40px;
+         letter-spacing: 0.5px;
+      }
+      
+      .auto-play-toggle {
+         background: none;
+         border: 1px solid var(--accent, #00c8f0);
+         color: var(--accent, #00c8f0);
+         cursor: pointer;
+         border-radius: 40px;
+         padding: 4px 14px;
+         font-size: 0.75rem;
+         font-family: inherit;
+         font-weight: 600;
+         transition: all 0.2s ease;
+      }
+      
+      .auto-play-toggle:hover {
+         background: var(--accent, #00c8f0);
+         color: #080d16;
+         transform: scale(1.02);
       }
       
       .carousel-container {
@@ -149,10 +186,21 @@
          box-shadow: 0 0 6px var(--accent, #00c8f0);
       }
       
+      /* Auto-play pulse effect while active */
+      @keyframes subtlePulse {
+         0% { opacity: 0.6; }
+         100% { opacity: 1; }
+      }
+      
+      .auto-playing .auto-play-indicator {
+         animation: subtlePulse 1.2s ease-in-out infinite;
+      }
+      
       @media (max-width: 640px) {
          .skill-badge { font-size: 0.75rem; padding: 6px 14px; }
          .carousel-btn { width: 36px; height: 36px; font-size: 1.1rem; }
          .carousel-title { font-size: 1.1rem; }
+         .auto-play-indicator { font-size: 0.7rem; }
       }
    </style>
 </head>
@@ -193,20 +241,17 @@
    <script>
       (function() {
          // ===== REVEAL EFFECT ON SCROLL =====
-         // Select all elements that should animate
          const elementsToReveal = document.querySelectorAll('section h2, section h3, section p, section img, section hr');
          
          elementsToReveal.forEach(el => {
             el.classList.add('reveal-item');
          });
          
-         // Create intersection observer for reveal effect
          const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                if (entry.isIntersecting) {
                   entry.target.classList.add('revealed');
                } else {
-                  // Remove class when out of view (so it hides again until focused)
                   entry.target.classList.remove('revealed');
                }
             });
@@ -216,18 +261,24 @@
             revealObserver.observe(el);
          });
          
-         // ===== SKILL CAROUSEL =====
+         // ===== SKILL CAROUSEL WITH AUTO-PLAY =====
          const skills = ['WordPress', 'C#', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JavaScript', 'Unreal Engine'];
          
-         // Find where to insert the carousel (after the first h2, or at beginning of section)
+         // Find where to insert the carousel (after the first h2)
          const firstH2 = document.querySelector('section h2');
          const existingCarousel = document.querySelector('.skill-carousel');
          
          if (firstH2 && !existingCarousel) {
-            // Create carousel HTML
+            // Enhanced carousel HTML with auto-play controls
             const carouselHTML = `
                <div class="skill-carousel reveal-item">
-                  <div class="carousel-title">✦ Tech Stack Carousel</div>
+                  <div class="carousel-title">
+                     <span>✦ Tech Stack Carousel</span>
+                     <div class="auto-play-indicator">
+                        <span class="auto-status-text">▶ Auto-scroll</span>
+                        <button class="auto-play-toggle" id="autoPlayToggleBtn" aria-label="Toggle auto play">⏸ Pause</button>
+                     </div>
+                  </div>
                   <div class="carousel-container">
                      <button class="carousel-btn prev-btn" aria-label="Previous">←</button>
                      <div class="carousel-track-wrapper">
@@ -244,33 +295,43 @@
             // Insert carousel before the first h2
             firstH2.insertAdjacentHTML('beforebegin', carouselHTML);
             
-            // Initialize carousel functionality
+            // ----- Carousel core variables -----
             let currentIndex = 0;
+            let autoPlayInterval = null;
+            let isAutoPlaying = true;        // auto-play enabled by default
+            let hoverPause = false;           // track manual hover pause state
+            
             const track = document.querySelector('.carousel-track');
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const dotsContainer = document.getElementById('carouselDots');
+            const autoToggleBtn = document.getElementById('autoPlayToggleBtn');
+            const statusTextSpan = document.querySelector('.auto-status-text');
+            const carouselContainer = document.querySelector('.skill-carousel');
             
+            // Helper: get items per view (responsive)
             function getItemsPerView() {
                if (window.innerWidth < 600) return 1;
                if (window.innerWidth < 900) return 2;
                return 3;
             }
             
+            // Helper: update carousel position, dots, and clamp index
             function updateCarousel() {
                const badges = document.querySelectorAll('.skill-badge');
+               if (!badges.length) return;
                const perView = getItemsPerView();
                const maxIndex = Math.max(0, badges.length - perView);
                
-               // Clamp current index
+               // Clamp index to valid range
                if (currentIndex > maxIndex) currentIndex = maxIndex;
                if (currentIndex < 0) currentIndex = 0;
                
-               // Calculate translate value
+               // Calculate translation based on first badge width + gap
                const firstBadge = badges[0];
-               if (firstBadge && badges.length > 0) {
+               if (firstBadge) {
                   const badgeWidth = firstBadge.offsetWidth;
-                  const gap = 20; // gap from CSS
+                  const gap = 20; // gap in pixels from CSS
                   const shift = currentIndex * (badgeWidth + gap);
                   track.style.transform = `translateX(-${shift}px)`;
                }
@@ -284,20 +345,120 @@
                      dot.classList.add('dot');
                      if (i === currentIndex) dot.classList.add('active');
                      dot.addEventListener('click', () => {
+                        if (autoPlayInterval) stopAutoPlay();
                         currentIndex = i;
                         updateCarousel();
+                        if (isAutoPlaying && !hoverPause) startAutoPlay();
                      });
                      dotsContainer.appendChild(dot);
                   }
                }
             }
             
-            // Event listeners
-            if (prevBtn && nextBtn) {
+            // Function to move to next slide (auto-play step)
+            function nextSlide() {
+               const badges = document.querySelectorAll('.skill-badge');
+               const perView = getItemsPerView();
+               const maxIndex = Math.max(0, badges.length - perView);
+               
+               if (currentIndex < maxIndex) {
+                  currentIndex++;
+                  updateCarousel();
+               } else {
+                  // Loop back to start for seamless infinite auto-play feeling
+                  currentIndex = 0;
+                  updateCarousel();
+               }
+            }
+            
+            // Start auto-play interval
+            function startAutoPlay() {
+               if (autoPlayInterval) clearInterval(autoPlayInterval);
+               if (!isAutoPlaying) return;
+               // Only start if not manually paused by toggle
+               if (!hoverPause && isAutoPlaying) {
+                  autoPlayInterval = setInterval(() => {
+                     nextSlide();
+                  }, 2200); // smooth 2.2 second interval
+               }
+            }
+            
+            // Stop auto-play and clear interval
+            function stopAutoPlay() {
+               if (autoPlayInterval) {
+                  clearInterval(autoPlayInterval);
+                  autoPlayInterval = null;
+               }
+            }
+            
+            // Full auto-play state refresh: stops, checks flags, restarts if needed
+            function refreshAutoPlay() {
+               stopAutoPlay();
+               if (isAutoPlaying && !hoverPause) {
+                  startAutoPlay();
+               }
+            }
+            
+            // Toggle auto-play on/off (manual by user clicking pause/play)
+            function toggleAutoPlayMode() {
+               isAutoPlaying = !isAutoPlaying;
+               if (isAutoPlaying) {
+                  // User turned auto-play ON
+                  if (autoToggleBtn) {
+                     autoToggleBtn.innerHTML = '⏸ Pause';
+                     autoToggleBtn.setAttribute('aria-label', 'Pause auto-scroll');
+                  }
+                  if (statusTextSpan) statusTextSpan.innerHTML = '▶ Auto-scroll';
+                  carouselContainer?.classList.add('auto-playing');
+                  // Reset hoverPause flag when toggling on, to ensure it runs
+                  hoverPause = false;
+                  refreshAutoPlay();
+               } else {
+                  // User turned auto-play OFF
+                  if (autoToggleBtn) {
+                     autoToggleBtn.innerHTML = '▶ Play';
+                     autoToggleBtn.setAttribute('aria-label', 'Start auto-scroll');
+                  }
+                  if (statusTextSpan) statusTextSpan.innerHTML = '⏸ Paused';
+                  carouselContainer?.classList.remove('auto-playing');
+                  stopAutoPlay();
+               }
+            }
+            
+            // Hover handling: pause auto-play when mouse enters carousel, resume on leave (only if auto-play mode is on)
+            function handleMouseEnter() {
+               if (isAutoPlaying && !hoverPause) {
+                  hoverPause = true;
+                  stopAutoPlay();
+               }
+            }
+            
+            function handleMouseLeave() {
+               if (isAutoPlaying && hoverPause) {
+                  hoverPause = false;
+                  startAutoPlay();
+               }
+            }
+            
+            // ----- Event listeners for manual navigation (prev/next) -----
+            if (prevBtn && nextBtn && track) {
                prevBtn.addEventListener('click', () => {
+                  // Stop auto-play temporarily for a smoother manual experience? 
+                  // But we respect current auto-play mode: just move manually and reset timer.
+                  const badges = document.querySelectorAll('.skill-badge');
+                  const perView = getItemsPerView();
                   if (currentIndex > 0) {
                      currentIndex--;
                      updateCarousel();
+                  } else {
+                     // Optional: wrap to end? For consistency with loop style, but natural UI: go to last
+                     const maxIndex = Math.max(0, badges.length - perView);
+                     currentIndex = maxIndex;
+                     updateCarousel();
+                  }
+                  // Reset auto-play timer on manual interaction (if auto-play is active)
+                  if (isAutoPlaying && !hoverPause) {
+                     refreshAutoPlay();
                   }
                });
                
@@ -308,24 +469,66 @@
                   if (currentIndex < maxIndex) {
                      currentIndex++;
                      updateCarousel();
+                  } else {
+                     currentIndex = 0;
+                     updateCarousel();
+                  }
+                  if (isAutoPlaying && !hoverPause) {
+                     refreshAutoPlay();
                   }
                });
-               
-               window.addEventListener('resize', () => {
-                  updateCarousel();
-               });
-               
-               // Initial update
-               setTimeout(updateCarousel, 100);
             }
+            
+            // Attach hover events to carousel container
+            const carouselElement = document.querySelector('.skill-carousel');
+            if (carouselElement) {
+               carouselElement.addEventListener('mouseenter', handleMouseEnter);
+               carouselElement.addEventListener('mouseleave', handleMouseLeave);
+            }
+            
+            // Attach toggle event
+            if (autoToggleBtn) {
+               autoToggleBtn.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  toggleAutoPlayMode();
+               });
+            }
+            
+            // Handle window resize: recalculate carousel position
+            window.addEventListener('resize', () => {
+               updateCarousel();
+               // restart auto-play timer after resize if needed
+               if (isAutoPlaying && !hoverPause) {
+                  refreshAutoPlay();
+               }
+            });
+            
+            // Initial update + start auto-play
+            setTimeout(() => {
+               updateCarousel();
+               // Apply initial auto-play class
+               if (carouselContainer) {
+                  if (isAutoPlaying) carouselContainer.classList.add('auto-playing');
+                  else carouselContainer.classList.remove('auto-playing');
+               }
+               if (isAutoPlaying) {
+                  startAutoPlay();
+               }
+            }, 150);
+            
+            // Add extra safety: if there are no badges, avoid errors; also ensure we observe the carousel for scroll reveal
          }
          
-         // Also observe the newly added carousel
+         // Observe the carousel for scroll effect if it's created
          const newCarousel = document.querySelector('.skill-carousel');
          if (newCarousel) {
             newCarousel.classList.add('reveal-item');
             revealObserver.observe(newCarousel);
          }
+         
+         // Additional micro interaction: handle dynamic skill badge count and ensure infinite feeling
+         // On page load and any time after, also handle potential future updates to skills
+         // We also store a global reset for any changes that might occur via external content (but skills are static, all good)
       })();
    </script>
 </body>

@@ -24,7 +24,6 @@
 This project focuses on responsive controls, dynamic difficulty scaling, and particle-based visual feedback. The player pilots a spacecraft at the bottom of the screen, dodging enemy projectiles while destroying waves of increasingly agile foes.
 
 **Key features:**
-- **Adaptive AI:** Enemies change formation and fire rates as the player's score increases.
 - **Power-up system:** Temporary boosts include spread shot, shield, and slow-motion time.
 - **Score chaining:** Consecutive hits multiply your score, encouraging aggressive play.
 - **Audio integration:** Dynamic soundtrack layers intensify during boss encounters.

@@ -210,7 +210,31 @@
    
    <script>
       (function() {
-         // Wait for the page to fully load
+         // ===== ORIGINAL REVEAL EFFECT ON SCROLL =====
+         // Select all elements that should animate
+         const elementsToReveal = document.querySelectorAll('section h2, section h3, section p, section img, section hr');
+         
+         elementsToReveal.forEach(el => {
+            el.classList.add('reveal-item');
+         });
+         
+         // Create intersection observer for reveal effect
+         const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+               if (entry.isIntersecting) {
+                  entry.target.classList.add('revealed');
+               } else {
+                  // Remove class when out of view (so it hides again until focused)
+                  entry.target.classList.remove('revealed');
+               }
+            });
+         }, { threshold: 0.2 });
+         
+         document.querySelectorAll('.reveal-item').forEach(el => {
+            revealObserver.observe(el);
+         });
+         
+         // ===== SKILL CAROUSEL WITH AUTO-PLAY =====
          function initCarousel() {
             // Check if carousel already exists
             if (document.querySelector('.skill-carousel')) {
@@ -223,22 +247,27 @@
             const section = document.querySelector('section');
             if (!section) return;
             
-            // Find the "About Me" section - look for any element containing "About Me" text
-            let aboutSection = null;
-            const allElements = section.querySelectorAll('h2, h3, p, div');
+            // Find the "About Me" section or "Technical skills" text
+            let targetSection = null;
+            const allElements = section.querySelectorAll('h2, h3, p, div, strong');
             for (let el of allElements) {
-               if (el.textContent && el.textContent.includes('About Me')) {
-                  aboutSection = el;
+               if (el.textContent && (el.textContent.includes('About Me') || el.textContent.includes('Technical skills'))) {
+                  targetSection = el;
                   break;
                }
             }
             
+            // If no "About Me" found, look for any h2
+            if (!targetSection) {
+               targetSection = section.querySelector('h2');
+            }
+            
             // Build carousel HTML
             const carouselHTML = `
-               <div class="skill-carousel reveal-item" style="margin: 20px 0 40px 0; display: block;">
+               <div class="skill-carousel reveal-item">
                   <div class="carousel-title">
-                     <span>✦</span>
-                     <div class="auto-badge">Skills</div>
+                     <span>✦ Tech Stack Carousel</span>
+                     <div class="auto-badge">⚡ auto-scroll • fast</div>
                   </div>
                   <div class="carousel-container">
                      <div class="carousel-track-wrapper">
@@ -251,17 +280,18 @@
                </div>
             `;
             
-            // Insert the carousel - either after About Me or at the beginning of section
-            if (aboutSection && aboutSection.parentNode) {
-               aboutSection.insertAdjacentHTML('afterend', carouselHTML);
+            // Insert the carousel
+            if (targetSection && targetSection.parentNode) {
+               targetSection.insertAdjacentHTML('afterend', carouselHTML);
             } else {
-               // Insert after the first paragraph or at the beginning
-               const firstParagraph = section.querySelector('p');
-               if (firstParagraph) {
-                  firstParagraph.insertAdjacentHTML('afterend', carouselHTML);
-               } else {
-                  section.insertAdjacentHTML('afterbegin', carouselHTML);
-               }
+               // Fallback: insert at beginning of section
+               section.insertAdjacentHTML('afterbegin', carouselHTML);
+            }
+            
+            // Add the carousel to the reveal observer
+            const carousel = document.querySelector('.skill-carousel');
+            if (carousel) {
+               revealObserver.observe(carousel);
             }
             
             // Initialize carousel functionality
@@ -374,31 +404,10 @@
                   if (autoInterval) clearInterval(autoInterval);
                });
             }
-            
-            // Add reveal effect
-            const carousel = document.querySelector('.skill-carousel');
-            if (carousel) {
-               const revealObserver = new IntersectionObserver((entries) => {
-                  entries.forEach(entry => {
-                     if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                     }
-                  });
-               }, { threshold: 0.15 });
-               revealObserver.observe(carousel);
-            }
          }
          
-         // Run when DOM is ready
-         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCarousel);
-         } else {
-            initCarousel();
-         }
-         
-         // Also run after a short delay to ensure dynamic content is loaded
-         setTimeout(initCarousel, 500);
-         setTimeout(initCarousel, 1000);
+         // Run carousel initialization after a short delay to ensure content is loaded
+         setTimeout(initCarousel, 100);
       })();
    </script>
 </body>

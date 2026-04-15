@@ -37,7 +37,7 @@
          filter: blur(0);
       }
       
-      /* ── SKILL CAROUSEL STYLES (Enhanced for Auto-Play) ────────── */
+      /* ── SKILL CAROUSEL STYLES (Fully Automatic) ───────────────── */
       .skill-carousel {
          background: var(--bg-card, #0d1422);
          border: 1px solid var(--border, rgba(0,200,240,0.11));
@@ -62,35 +62,29 @@
          gap: 12px;
       }
       
-      .auto-play-indicator {
+      .auto-badge {
          display: flex;
          align-items: center;
-         gap: 12px;
-         font-size: 0.8rem;
+         gap: 8px;
+         font-size: 0.75rem;
          font-family: 'DM Mono', monospace;
-         background: rgba(0, 200, 240, 0.08);
-         padding: 5px 12px;
+         background: rgba(0, 200, 240, 0.12);
+         padding: 5px 14px;
          border-radius: 40px;
          letter-spacing: 0.5px;
-      }
-      
-      .auto-play-toggle {
-         background: none;
-         border: 1px solid var(--accent, #00c8f0);
          color: var(--accent, #00c8f0);
-         cursor: pointer;
-         border-radius: 40px;
-         padding: 4px 14px;
-         font-size: 0.75rem;
-         font-family: inherit;
-         font-weight: 600;
-         transition: all 0.2s ease;
+         border: 1px solid rgba(0,200,240,0.2);
       }
       
-      .auto-play-toggle:hover {
-         background: var(--accent, #00c8f0);
-         color: #080d16;
-         transform: scale(1.02);
+      .auto-badge::before {
+         content: "⚡";
+         font-size: 0.9rem;
+         animation: pulseIcon 1.2s ease-in-out infinite;
+      }
+      
+      @keyframes pulseIcon {
+         0% { opacity: 0.6; transform: scale(0.95);}
+         100% { opacity: 1; transform: scale(1.1);}
       }
       
       .carousel-container {
@@ -111,7 +105,7 @@
       .carousel-track {
          display: flex;
          gap: 20px;
-         transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+         transition: transform 0.5s cubic-bezier(0.25, 0.92, 0.4, 1);
          will-change: transform;
       }
       
@@ -129,41 +123,17 @@
          white-space: nowrap;
          transition: all 0.2s ease;
          cursor: default;
+         backdrop-filter: blur(2px);
       }
       
       .skill-badge:hover {
          transform: scale(1.03);
          background: rgba(0,200,240,0.22);
          border-color: var(--accent, #00c8f0);
-         box-shadow: 0 0 12px rgba(0,200,240,0.3);
+         box-shadow: 0 0 14px rgba(0,200,240,0.4);
       }
       
-      .carousel-btn {
-         background: var(--bg-raised, #111927);
-         border: 1px solid var(--border, rgba(0,200,240,0.11));
-         color: var(--accent, #00c8f0);
-         width: 44px;
-         height: 44px;
-         border-radius: 50%;
-         cursor: pointer;
-         font-size: 1.4rem;
-         font-weight: bold;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         transition: all 0.2s ease;
-         background-color: rgba(17, 25, 39, 0.8);
-         backdrop-filter: blur(4px);
-      }
-      
-      .carousel-btn:hover {
-         background: var(--accent, #00c8f0);
-         color: #080d16;
-         border-color: var(--accent, #00c8f0);
-         transform: scale(1.05);
-         box-shadow: 0 0 12px var(--accent, #00c8f0);
-      }
-      
+      /* No manual buttons — completely automatic. Only decorative */
       .carousel-dots {
          display: flex;
          justify-content: center;
@@ -176,31 +146,31 @@
          height: 8px;
          background: var(--txt-faint, #384858);
          border-radius: 10px;
+         transition: all 0.25s ease;
          cursor: pointer;
-         transition: all 0.2s ease;
       }
       
       .dot.active {
          width: 28px;
          background: var(--accent, #00c8f0);
-         box-shadow: 0 0 6px var(--accent, #00c8f0);
+         box-shadow: 0 0 8px var(--accent, #00c8f0);
       }
       
-      /* Auto-play pulse effect while active */
-      @keyframes subtlePulse {
-         0% { opacity: 0.6; }
-         100% { opacity: 1; }
+      /* subtle glow effect while auto-moving */
+      @keyframes carouselGlow {
+         0% { box-shadow: 0 0 0px rgba(0,200,240,0); }
+         50% { box-shadow: 0 0 6px rgba(0,200,240,0.2); }
+         100% { box-shadow: 0 0 0px rgba(0,200,240,0); }
       }
       
-      .auto-playing .auto-play-indicator {
-         animation: subtlePulse 1.2s ease-in-out infinite;
+      .skill-carousel {
+         animation: carouselGlow 3s infinite ease;
       }
       
       @media (max-width: 640px) {
          .skill-badge { font-size: 0.75rem; padding: 6px 14px; }
-         .carousel-btn { width: 36px; height: 36px; font-size: 1.1rem; }
          .carousel-title { font-size: 1.1rem; }
-         .auto-play-indicator { font-size: 0.7rem; }
+         .auto-badge { font-size: 0.65rem; padding: 3px 10px; }
       }
    </style>
 </head>
@@ -261,82 +231,74 @@
             revealObserver.observe(el);
          });
          
-         // ===== SKILL CAROUSEL WITH AUTO-PLAY =====
+         // ===== FULLY AUTOMATIC CAROUSEL (FASTER, NO MANUAL TOGGLE/BUTTONS) =====
          const skills = ['WordPress', 'C#', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JavaScript', 'Unreal Engine'];
          
-         // Find where to insert the carousel (after the first h2)
+         // Find insertion point (after first h2)
          const firstH2 = document.querySelector('section h2');
          const existingCarousel = document.querySelector('.skill-carousel');
          
          if (firstH2 && !existingCarousel) {
-            // Enhanced carousel HTML with auto-play controls
+            // Build carousel — NO prev/next buttons, NO pause/play toggle, just automatic.
             const carouselHTML = `
                <div class="skill-carousel reveal-item">
                   <div class="carousel-title">
                      <span>✦ Tech Stack Carousel</span>
-                     <div class="auto-play-indicator">
-                        <span class="auto-status-text">▶ Auto-scroll</span>
-                        <button class="auto-play-toggle" id="autoPlayToggleBtn" aria-label="Toggle auto play">⏸ Pause</button>
-                     </div>
+                     <div class="auto-badge">auto-scroll • fast</div>
                   </div>
                   <div class="carousel-container">
-                     <button class="carousel-btn prev-btn" aria-label="Previous">←</button>
                      <div class="carousel-track-wrapper">
                         <div class="carousel-track" id="carouselTrack">
                            ${skills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
                         </div>
                      </div>
-                     <button class="carousel-btn next-btn" aria-label="Next">→</button>
                   </div>
                   <div class="carousel-dots" id="carouselDots"></div>
                </div>
             `;
             
-            // Insert carousel before the first h2
             firstH2.insertAdjacentHTML('beforebegin', carouselHTML);
             
-            // ----- Carousel core variables -----
-            let currentIndex = 0;
-            let autoPlayInterval = null;
-            let isAutoPlaying = true;        // auto-play enabled by default
-            let hoverPause = false;           // track manual hover pause state
-            
+            // ----- DOM elements -----
             const track = document.querySelector('.carousel-track');
-            const prevBtn = document.querySelector('.prev-btn');
-            const nextBtn = document.querySelector('.next-btn');
             const dotsContainer = document.getElementById('carouselDots');
-            const autoToggleBtn = document.getElementById('autoPlayToggleBtn');
-            const statusTextSpan = document.querySelector('.auto-status-text');
-            const carouselContainer = document.querySelector('.skill-carousel');
             
-            // Helper: get items per view (responsive)
+            // Carousel state
+            let currentIndex = 0;
+            let autoInterval = null;
+            let isTransitioning = false;    // prevent rapid overlapping updates during animation
+            
+            // Helper: get items per view based on screen width
             function getItemsPerView() {
                if (window.innerWidth < 600) return 1;
                if (window.innerWidth < 900) return 2;
                return 3;
             }
             
-            // Helper: update carousel position, dots, and clamp index
-            function updateCarousel() {
+            // Helper: update carousel position, dots, and index clamping
+            function updateCarousel(skipTransitionFlag = false) {
                const badges = document.querySelectorAll('.skill-badge');
                if (!badges.length) return;
+               
                const perView = getItemsPerView();
                const maxIndex = Math.max(0, badges.length - perView);
                
-               // Clamp index to valid range
+               // Clamp currentIndex
                if (currentIndex > maxIndex) currentIndex = maxIndex;
                if (currentIndex < 0) currentIndex = 0;
                
-               // Calculate translation based on first badge width + gap
+               // Get the width of first badge + gap
                const firstBadge = badges[0];
                if (firstBadge) {
                   const badgeWidth = firstBadge.offsetWidth;
-                  const gap = 20; // gap in pixels from CSS
+                  const gap = 20; // matches CSS gap between badges
                   const shift = currentIndex * (badgeWidth + gap);
+                  
+                  // Apply transform with smooth transition (CSS already has transition)
                   track.style.transform = `translateX(-${shift}px)`;
                }
                
-               // Update dots
+               // Update dot indicators
                const totalDots = Math.max(1, badges.length - perView + 1);
                if (dotsContainer) {
                   dotsContainer.innerHTML = '';
@@ -344,191 +306,141 @@
                      const dot = document.createElement('div');
                      dot.classList.add('dot');
                      if (i === currentIndex) dot.classList.add('active');
-                     dot.addEventListener('click', () => {
-                        if (autoPlayInterval) stopAutoPlay();
-                        currentIndex = i;
-                        updateCarousel();
-                        if (isAutoPlaying && !hoverPause) startAutoPlay();
+                     // Dots are clickable for quick navigation, but no manual mode — they just reposition the carousel.
+                     // Clicking a dot will reset the auto timer to keep experience smooth.
+                     dot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (autoInterval) {
+                           // reset timer: clear and restart after manual dot click
+                           clearInterval(autoInterval);
+                           currentIndex = i;
+                           updateCarousel();
+                           startAutoRotation(); // restart fresh interval
+                        } else {
+                           currentIndex = i;
+                           updateCarousel();
+                        }
                      });
                      dotsContainer.appendChild(dot);
                   }
                }
             }
             
-            // Function to move to next slide (auto-play step)
-            function nextSlide() {
+            // Move to next slide (called by setInterval)
+            function moveToNextSlide() {
+               // Avoid overlapping if transition is ongoing (double call protection)
+               if (isTransitioning) return;
+               
                const badges = document.querySelectorAll('.skill-badge');
+               if (!badges.length) return;
+               
                const perView = getItemsPerView();
                const maxIndex = Math.max(0, badges.length - perView);
                
-               if (currentIndex < maxIndex) {
-                  currentIndex++;
-                  updateCarousel();
-               } else {
-                  // Loop back to start for seamless infinite auto-play feeling
-                  currentIndex = 0;
-                  updateCarousel();
+               let nextIndex = currentIndex + 1;
+               if (nextIndex > maxIndex) {
+                  // seamless loop: go back to first
+                  nextIndex = 0;
                }
-            }
-            
-            // Start auto-play interval
-            function startAutoPlay() {
-               if (autoPlayInterval) clearInterval(autoPlayInterval);
-               if (!isAutoPlaying) return;
-               // Only start if not manually paused by toggle
-               if (!hoverPause && isAutoPlaying) {
-                  autoPlayInterval = setInterval(() => {
-                     nextSlide();
-                  }, 2200); // smooth 2.2 second interval
-               }
-            }
-            
-            // Stop auto-play and clear interval
-            function stopAutoPlay() {
-               if (autoPlayInterval) {
-                  clearInterval(autoPlayInterval);
-                  autoPlayInterval = null;
-               }
-            }
-            
-            // Full auto-play state refresh: stops, checks flags, restarts if needed
-            function refreshAutoPlay() {
-               stopAutoPlay();
-               if (isAutoPlaying && !hoverPause) {
-                  startAutoPlay();
-               }
-            }
-            
-            // Toggle auto-play on/off (manual by user clicking pause/play)
-            function toggleAutoPlayMode() {
-               isAutoPlaying = !isAutoPlaying;
-               if (isAutoPlaying) {
-                  // User turned auto-play ON
-                  if (autoToggleBtn) {
-                     autoToggleBtn.innerHTML = '⏸ Pause';
-                     autoToggleBtn.setAttribute('aria-label', 'Pause auto-scroll');
-                  }
-                  if (statusTextSpan) statusTextSpan.innerHTML = '▶ Auto-scroll';
-                  carouselContainer?.classList.add('auto-playing');
-                  // Reset hoverPause flag when toggling on, to ensure it runs
-                  hoverPause = false;
-                  refreshAutoPlay();
-               } else {
-                  // User turned auto-play OFF
-                  if (autoToggleBtn) {
-                     autoToggleBtn.innerHTML = '▶ Play';
-                     autoToggleBtn.setAttribute('aria-label', 'Start auto-scroll');
-                  }
-                  if (statusTextSpan) statusTextSpan.innerHTML = '⏸ Paused';
-                  carouselContainer?.classList.remove('auto-playing');
-                  stopAutoPlay();
-               }
-            }
-            
-            // Hover handling: pause auto-play when mouse enters carousel, resume on leave (only if auto-play mode is on)
-            function handleMouseEnter() {
-               if (isAutoPlaying && !hoverPause) {
-                  hoverPause = true;
-                  stopAutoPlay();
-               }
-            }
-            
-            function handleMouseLeave() {
-               if (isAutoPlaying && hoverPause) {
-                  hoverPause = false;
-                  startAutoPlay();
-               }
-            }
-            
-            // ----- Event listeners for manual navigation (prev/next) -----
-            if (prevBtn && nextBtn && track) {
-               prevBtn.addEventListener('click', () => {
-                  // Stop auto-play temporarily for a smoother manual experience? 
-                  // But we respect current auto-play mode: just move manually and reset timer.
-                  const badges = document.querySelectorAll('.skill-badge');
-                  const perView = getItemsPerView();
-                  if (currentIndex > 0) {
-                     currentIndex--;
-                     updateCarousel();
-                  } else {
-                     // Optional: wrap to end? For consistency with loop style, but natural UI: go to last
-                     const maxIndex = Math.max(0, badges.length - perView);
-                     currentIndex = maxIndex;
-                     updateCarousel();
-                  }
-                  // Reset auto-play timer on manual interaction (if auto-play is active)
-                  if (isAutoPlaying && !hoverPause) {
-                     refreshAutoPlay();
-                  }
-               });
                
-               nextBtn.addEventListener('click', () => {
-                  const badges = document.querySelectorAll('.skill-badge');
-                  const perView = getItemsPerView();
-                  const maxIndex = Math.max(0, badges.length - perView);
-                  if (currentIndex < maxIndex) {
-                     currentIndex++;
-                     updateCarousel();
-                  } else {
+               // Only update if index changes
+               if (nextIndex !== currentIndex) {
+                  isTransitioning = true;
+                  currentIndex = nextIndex;
+                  updateCarousel();
+                  
+                  // Unlock transition flag after CSS transition ends (smoothness)
+                  setTimeout(() => {
+                     isTransitioning = false;
+                  }, 500); // slightly longer than CSS transition (0.5s)
+               } else {
+                  // If maxIndex = 0 (only 1 visible), we still reset index to 0 but no visual change, just for consistency.
+                  if (maxIndex === 0) {
                      currentIndex = 0;
                      updateCarousel();
                   }
-                  if (isAutoPlaying && !hoverPause) {
-                     refreshAutoPlay();
-                  }
-               });
-            }
-            
-            // Attach hover events to carousel container
-            const carouselElement = document.querySelector('.skill-carousel');
-            if (carouselElement) {
-               carouselElement.addEventListener('mouseenter', handleMouseEnter);
-               carouselElement.addEventListener('mouseleave', handleMouseLeave);
-            }
-            
-            // Attach toggle event
-            if (autoToggleBtn) {
-               autoToggleBtn.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  toggleAutoPlayMode();
-               });
-            }
-            
-            // Handle window resize: recalculate carousel position
-            window.addEventListener('resize', () => {
-               updateCarousel();
-               // restart auto-play timer after resize if needed
-               if (isAutoPlaying && !hoverPause) {
-                  refreshAutoPlay();
                }
+            }
+            
+            // Start auto rotation with faster speed (1.2 seconds per slide)
+            function startAutoRotation() {
+               if (autoInterval) clearInterval(autoInterval);
+               // Faster movement: 1200ms between slides for dynamic feel
+               autoInterval = setInterval(() => {
+                  moveToNextSlide();
+               }, 1200);
+            }
+            
+            // Optional: Pause on hover? Not requested, but adds polish without breaking "only automatic" requirement.
+            // However, the requirement says "the automatic carousel should be faster also remove the option to manual to automatic. it should be only automatic."
+            // We interpret as: no toggle buttons, no manual start/stop controls, but hover pause might be considered manual override? 
+            // To strictly adhere: carousel always moves automatically even on hover? But hover pause could be seen as "extra". However, typical UX for auto carousel
+            // often pauses on hover to improve readability. But to be pure "only automatic" and no manual interference at all, we will NOT add hover pause.
+            // The carousel will scroll endlessly without any user pause. The user can click dots (navigation) but that's not a "manual to automatic" toggle.
+            // Since requirement says "remove the option to manual to automatic", we don't include play/pause. Dots just navigate but auto continues.
+            // That's still fully automatic because it never stops auto-moving after dot click. We'll ensure that.
+            
+            // To satisfy faster movement and no pause, we just start interval and on dot click we restart interval to avoid timer overlap.
+            function enhancedStartWithReset() {
+               if (autoInterval) clearInterval(autoInterval);
+               startAutoRotation();
+            }
+            
+            // Handle resize: recalculate positions without disrupting auto-play
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+               clearTimeout(resizeTimeout);
+               resizeTimeout = setTimeout(() => {
+                  // Preserve current index but clamp to new max items per view
+                  const badges = document.querySelectorAll('.skill-badge');
+                  const perView = getItemsPerView();
+                  const maxIndex = Math.max(0, badges.length - perView);
+                  if (currentIndex > maxIndex) currentIndex = maxIndex;
+                  updateCarousel();
+               }, 100);
             });
             
-            // Initial update + start auto-play
-            setTimeout(() => {
+            // If the carousel track needs to wait for images/fonts, do initial update
+            // Also observe DOM changes if any, but not needed.
+            const initCarousel = () => {
                updateCarousel();
-               // Apply initial auto-play class
-               if (carouselContainer) {
-                  if (isAutoPlaying) carouselContainer.classList.add('auto-playing');
-                  else carouselContainer.classList.remove('auto-playing');
-               }
-               if (isAutoPlaying) {
-                  startAutoPlay();
-               }
-            }, 150);
+               startAutoRotation();
+            };
             
-            // Add extra safety: if there are no badges, avoid errors; also ensure we observe the carousel for scroll reveal
+            // Slight delay to ensure layout is fully rendered
+            setTimeout(initCarousel, 80);
+            
+            // Additional safety: if someone clicks on dot, we restart auto timer to keep continuous auto scroll
+            // Since dots are created dynamically inside updateCarousel, we have already added event listener that resets interval.
+            // But also we want to make sure that after dot click, the carousel continues auto without extra fluff.
+            // In dot click listener we already call startAutoRotation after clearing interval, but we need to override the existing listener
+            // to use our enhanced version (restart). However the dot event listener is inside updateCarousel, we have that logic.
+            // We also ensure that after manual dot navigation, auto rotation resumes instantly with same speed.
+            // Good.
+            
+            // Edge case: avoid memory leaks and keep interval clean
+            window.addEventListener('beforeunload', () => {
+               if (autoInterval) clearInterval(autoInterval);
+            });
+            
+            // Also for perfect infinite loop smoothness, when reaching the end, we loop back. Already handled in moveToNextSlide
+            // Now add an extra subtle style to show that it's high-speed automatic.
+            const carouselDiv = document.querySelector('.skill-carousel');
+            if (carouselDiv) {
+               // enhance visual feedback for speed
+               carouselDiv.style.transition = 'box-shadow 0.2s';
+            }
          }
          
-         // Observe the carousel for scroll effect if it's created
-         const newCarousel = document.querySelector('.skill-carousel');
-         if (newCarousel) {
-            newCarousel.classList.add('reveal-item');
-            revealObserver.observe(newCarousel);
+         // Ensure carousel gets revealed on scroll if it was added
+         const maybeCarousel = document.querySelector('.skill-carousel');
+         if (maybeCarousel && !maybeCarousel.classList.contains('reveal-item')) {
+            maybeCarousel.classList.add('reveal-item');
+            revealObserver.observe(maybeCarousel);
          }
          
-         // Additional micro interaction: handle dynamic skill badge count and ensure infinite feeling
-         // On page load and any time after, also handle potential future updates to skills
-         // We also store a global reset for any changes that might occur via external content (but skills are static, all good)
+         // Additional: if the carousel already exists but we didn't create it (edge), still apply auto but no duplication.
+         // But we check existingCarousel at top, so it's fine.
       })();
    </script>
 </body>

@@ -7,7 +7,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
       gtag('config', '{{ site.google_analytics }}');
    </script>
    {% endif %}
@@ -39,13 +38,13 @@
       
       /* ── SKILL CAROUSEL STYLES (Fully Automatic) ───────────────── */
       .skill-carousel {
-         background: var(--bg-card, #0d1422);
-         border: 1px solid var(--border, rgba(0,200,240,0.2));
+         background: linear-gradient(135deg, #0d1422 0%, #0a0f18 100%);
+         border: 1px solid rgba(0,200,240,0.25);
          border-radius: 24px;
          padding: 28px 24px;
          margin: 30px 0 40px;
          transition: all 0.3s ease;
-         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+         box-shadow: 0 8px 20px rgba(0,0,0,0.4);
       }
       
       .carousel-title {
@@ -53,8 +52,8 @@
          font-size: 1.4rem;
          font-weight: 700;
          margin-bottom: 24px;
-         color: var(--txt, #dde6f0);
-         border-left: 4px solid var(--accent, #00c8f0);
+         color: #dde6f0;
+         border-left: 4px solid #00c8f0;
          padding-left: 20px;
          display: flex;
          align-items: center;
@@ -73,7 +72,7 @@
          padding: 6px 16px;
          border-radius: 40px;
          letter-spacing: 0.5px;
-         color: var(--accent, #00c8f0);
+         color: #00c8f0;
          border: 1px solid rgba(0,200,240,0.3);
       }
       
@@ -99,7 +98,7 @@
          overflow: hidden;
          flex: 1;
          border-radius: 80px;
-         background: rgba(0,0,0,0.3);
+         background: rgba(0,0,0,0.4);
          padding: 10px 0;
       }
       
@@ -119,7 +118,7 @@
          font-weight: 600;
          font-size: 1rem;
          letter-spacing: 0.02em;
-         color: var(--accent, #00c8f0);
+         color: #00c8f0;
          border: 1px solid rgba(0,200,240,0.4);
          white-space: nowrap;
          transition: all 0.25s ease;
@@ -130,7 +129,7 @@
       .skill-badge:hover {
          transform: scale(1.05);
          background: rgba(0,200,240,0.25);
-         border-color: var(--accent, #00c8f0);
+         border-color: #00c8f0;
          box-shadow: 0 0 18px rgba(0,200,240,0.4);
       }
       
@@ -211,64 +210,32 @@
    
    <script>
       (function() {
-         // ===== REVEAL EFFECT ON SCROLL =====
-         const elementsToReveal = document.querySelectorAll('section h2, section h3, section p, section img, section hr, .about-me-section');
-         
-         elementsToReveal.forEach(el => {
-            if (!el.classList.contains('reveal-item')) {
-               el.classList.add('reveal-item');
+         // Wait for the page to fully load
+         function initCarousel() {
+            // Check if carousel already exists
+            if (document.querySelector('.skill-carousel')) {
+               return;
             }
-         });
-         
-         const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-               if (entry.isIntersecting) {
-                  entry.target.classList.add('revealed');
-               } else {
-                  entry.target.classList.remove('revealed');
-               }
-            });
-         }, { threshold: 0.15 });
-         
-         document.querySelectorAll('.reveal-item').forEach(el => {
-            revealObserver.observe(el);
-         });
-         
-         // ===== FULLY AUTOMATIC CAROUSEL - WILL ALWAYS SHOW =====
-         const skills = ['WordPress', 'C#', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JavaScript', 'Unreal Engine'];
-         
-         // Check if carousel already exists
-         const existingCarousel = document.querySelector('.skill-carousel');
-         
-         if (!existingCarousel) {
-            // Find the best place to insert the carousel
-            // Look for: "About Me" heading, or any h2, or the Technical skills section, or just before footer
-            let insertPoint = null;
             
-            // Try to find "About Me" heading
-            const aboutHeading = Array.from(document.querySelectorAll('section h2, section h3')).find(
-               h => h.textContent.toLowerCase().includes('about')
-            );
+            const skills = ['WordPress', 'C#', 'Java', 'HTML', 'CSS', 'Bootstrap', 'JavaScript', 'Unreal Engine'];
             
-            if (aboutHeading) {
-               insertPoint = aboutHeading;
-            } else {
-               // Try to find any h2 or h3
-               const anyHeading = document.querySelector('section h2, section h3');
-               if (anyHeading) {
-                  insertPoint = anyHeading;
-               } else {
-                  // If no headings, find the section content start
-                  const sectionContent = document.querySelector('section');
-                  if (sectionContent && sectionContent.firstChild) {
-                     insertPoint = sectionContent.firstChild;
-                  }
+            // Find the section element
+            const section = document.querySelector('section');
+            if (!section) return;
+            
+            // Find the "About Me" section - look for any element containing "About Me" text
+            let aboutSection = null;
+            const allElements = section.querySelectorAll('h2, h3, p, div');
+            for (let el of allElements) {
+               if (el.textContent && el.textContent.includes('About Me')) {
+                  aboutSection = el;
+                  break;
                }
             }
             
             // Build carousel HTML
             const carouselHTML = `
-               <div class="skill-carousel reveal-item" style="margin: 20px 0 40px 0;">
+               <div class="skill-carousel reveal-item" style="margin: 20px 0 40px 0; display: block;">
                   <div class="carousel-title">
                      <span>✦ Tech Stack Carousel</span>
                      <div class="auto-badge">⚡ auto-scroll • fast</div>
@@ -284,35 +251,34 @@
                </div>
             `;
             
-            // Insert the carousel
-            if (insertPoint) {
-               insertPoint.insertAdjacentHTML('beforebegin', carouselHTML);
+            // Insert the carousel - either after About Me or at the beginning of section
+            if (aboutSection && aboutSection.parentNode) {
+               aboutSection.insertAdjacentHTML('afterend', carouselHTML);
             } else {
-               // Fallback: append to section
-               const section = document.querySelector('section');
-               if (section) {
+               // Insert after the first paragraph or at the beginning
+               const firstParagraph = section.querySelector('p');
+               if (firstParagraph) {
+                  firstParagraph.insertAdjacentHTML('afterend', carouselHTML);
+               } else {
                   section.insertAdjacentHTML('afterbegin', carouselHTML);
                }
             }
             
-            // ----- DOM elements -----
+            // Initialize carousel functionality
             const track = document.querySelector('.carousel-track');
             const dotsContainer = document.getElementById('carouselDots');
             
             if (track && dotsContainer) {
-               // Carousel state
                let currentIndex = 0;
                let autoInterval = null;
                let isTransitioning = false;
                
-               // Helper: get items per view based on screen width
                function getItemsPerView() {
                   if (window.innerWidth < 600) return 1;
                   if (window.innerWidth < 900) return 2;
                   return 3;
                }
                
-               // Helper: update carousel position, dots, and index clamping
                function updateCarousel() {
                   const badges = document.querySelectorAll('.skill-badge');
                   if (!badges.length) return;
@@ -320,11 +286,9 @@
                   const perView = getItemsPerView();
                   const maxIndex = Math.max(0, badges.length - perView);
                   
-                  // Clamp currentIndex
                   if (currentIndex > maxIndex) currentIndex = maxIndex;
                   if (currentIndex < 0) currentIndex = 0;
                   
-                  // Get the width of first badge + gap
                   const firstBadge = badges[0];
                   if (firstBadge && track) {
                      const badgeWidth = firstBadge.offsetWidth;
@@ -333,7 +297,6 @@
                      track.style.transform = `translateX(-${shift}px)`;
                   }
                   
-                  // Update dot indicators
                   const totalDots = Math.max(1, badges.length - perView + 1);
                   if (dotsContainer) {
                      dotsContainer.innerHTML = '';
@@ -343,7 +306,6 @@
                         if (i === currentIndex) dot.classList.add('active');
                         dot.addEventListener('click', (e) => {
                            e.stopPropagation();
-                           // Reset timer on dot click
                            if (autoInterval) {
                               clearInterval(autoInterval);
                               currentIndex = i;
@@ -359,7 +321,6 @@
                   }
                }
                
-               // Move to next slide
                function moveToNextSlide() {
                   if (isTransitioning) return;
                   
@@ -385,15 +346,13 @@
                   }
                }
                
-               // Start auto rotation - FAST speed (1 second per slide)
                function startAutoRotation() {
                   if (autoInterval) clearInterval(autoInterval);
                   autoInterval = setInterval(() => {
                      moveToNextSlide();
-                  }, 1000); // Fast: 1 second per slide
+                  }, 1000);
                }
                
-               // Handle resize
                let resizeTimeout;
                window.addEventListener('resize', () => {
                   clearTimeout(resizeTimeout);
@@ -406,25 +365,40 @@
                   }, 100);
                });
                
-               // Initialize
                setTimeout(() => {
                   updateCarousel();
                   startAutoRotation();
                }, 100);
                
-               // Clean up on page unload
                window.addEventListener('beforeunload', () => {
                   if (autoInterval) clearInterval(autoInterval);
                });
             }
+            
+            // Add reveal effect
+            const carousel = document.querySelector('.skill-carousel');
+            if (carousel) {
+               const revealObserver = new IntersectionObserver((entries) => {
+                  entries.forEach(entry => {
+                     if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                     }
+                  });
+               }, { threshold: 0.15 });
+               revealObserver.observe(carousel);
+            }
          }
          
-         // Ensure carousel gets revealed on scroll
-         const carouselElement = document.querySelector('.skill-carousel');
-         if (carouselElement && !carouselElement.classList.contains('reveal-item')) {
-            carouselElement.classList.add('reveal-item');
-            revealObserver.observe(carouselElement);
+         // Run when DOM is ready
+         if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCarousel);
+         } else {
+            initCarousel();
          }
+         
+         // Also run after a short delay to ensure dynamic content is loaded
+         setTimeout(initCarousel, 500);
+         setTimeout(initCarousel, 1000);
       })();
    </script>
 </body>
